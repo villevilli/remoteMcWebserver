@@ -116,3 +116,9 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+#minecraft server folder
+mcserver/*
+
+# exception to the rule
+!mcserver/.gitkeep 
