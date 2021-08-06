@@ -1,0 +1,44 @@
+html{
+    background-color: rgb(30, 30, 30);
+
+}
+.log{
+    text-align: left;
+}
+.powerButton{
+    text-align: center;
+}
+div.powerButton{
+    text-align: right;
+}
+div.log{
+    overflow: scroll;
+    white-space: nowrap;
+    height: 60em;
+    outline: 2px solid white;
+    border-radius: 4px;
+    padding: 1rem;
+    padding-top: 0rem;
+    box-sizing: border-box;
+    background-color: rgb(20, 20, 20);
+    box-shadow: inset 1rem 1rem 1px 1px rgba(0, 0, 0, 0.19),1rem 1rem 1px 1px rgba(0, 0, 0, 0.19);
+}
+.main{
+    padding: 3em;
+    padding-left: 10%;
+    padding-right: 10%;
+}
+#log{
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 14px;
+    color: red;
+}
+.info{
+    color: lightgray;
+}
+.warning{
+    color: yellow;
+}
+.error{
+    color: red;
+}
