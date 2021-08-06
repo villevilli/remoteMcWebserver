@@ -2,11 +2,13 @@ var http = require('http');
 var fs = require('fs');
 var mime = require('mime-types');
 
+//path to the minecraft server latest.log
 var mcLogPath = './mcserver/logs/latest.log'
 const PORT=80; 
 
+//webserver handling returns are used to skip the rest of the js to not crash
 var server = http.createServer(function (req, res) {
-    //used to get the log for the minecraft server
+    //returns the log file as text
     if (req.url == '/mclog'){
         fs.readFile(mcLogPath, function (err, data){
             if (err) {
@@ -22,11 +24,12 @@ var server = http.createServer(function (req, res) {
         return;
 
     }
-    //returns index html when no content is specified
+    //returns index.html when no content is specified
     else if (req.url == '/'){
         req.url = '/index.html'
     }
 
+    //looks for the file specified in the url relative to /http/
     fs.readFile('http'+req.url, function (err, data) {
         if (err) {
             console.log(err)
@@ -40,6 +43,7 @@ var server = http.createServer(function (req, res) {
     });
 });
 
+//starts the server listener
 server.listen(PORT);
 
 console.log('Node.js web server at port '+PORT.toString()+' is running..');
