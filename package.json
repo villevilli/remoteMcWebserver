@@ -1,0 +1,24 @@
+{
+  "name": "mcwebserverremote",
+  "version": "1.0.0",
+  "description": "A web application to control a minecraft server remotely",
+  "main": "server.js",
+  "dependencies": {
+    "mime-types": "^2.1.32"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/villevilli/remoteMcWebserver.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/villevilli/remoteMcWebserver/issues"
+  },
+  "homepage": "https://github.com/villevilli/remoteMcWebserver#readme"
+}
