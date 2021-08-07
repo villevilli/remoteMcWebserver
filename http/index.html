@@ -10,8 +10,8 @@
     <html>
     <div class="main">
         <div class="powerButton">
-            <button class="powerButton">start server</button>
-            <button class="powerButton">stop server</button>
+            <button class="powerButton" id="stopButton" onclick="fetch('/api/startserver/')">start server</button>
+            <button class="powerButton" id="stopButton" onclick="fetch('/api/stopserver/')">stop server</button>
         </div>
         <div class="logControls">
             <div class="log" id="scrollBox">

@@ -4,7 +4,9 @@
   "description": "A web application to control a minecraft server remotely",
   "main": "server.js",
   "dependencies": {
-    "mime-types": "^2.1.32"
+    "escape-html": "^1.0.3",
+    "mime-types": "^2.1.32",
+    "ps-tree": "^1.2.0"
   },
   "devDependencies": {},
   "scripts": {

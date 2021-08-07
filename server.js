@@ -1,6 +1,12 @@
 var http = require('http');
 var fs = require('fs');
 var mime = require('mime-types');
+var escape = require('escape-html');
+
+var cp = require('child_process'),
+    psTree = require('ps-tree');
+
+var mcServer
 
 //path to the minecraft server latest.log
 var mcLogPath = './mcserver/logs/latest.log'
@@ -9,7 +15,7 @@ const PORT=80;
 //webserver handling returns are used to skip the rest of the js to not crash
 var server = http.createServer(function (req, res) {
     //returns the log file as text
-    if (req.url == '/mclog'){
+    if (req.url == '/api/mclog'){
         fs.readFile(mcLogPath, function (err, data){
             if (err) {
                 console.log(err)
@@ -19,8 +25,36 @@ var server = http.createServer(function (req, res) {
             }
             res.setHeader("Content-Type", mime.lookup(req.url));
             res.writeHead(200);
-            return res.end(data);
+            return res.end(escape(data));
         });
+        return;
+
+    }
+    //handles other api calls than the mclog
+    if (req.url.startsWith('/api/')){
+        switch(req.url){
+            case "/api/startserver/":
+                mcServer = cp.exec('java -jar server.jar',{cwd: './mcserver'},
+                function (error, stdout, stderr){
+                    console.log('stdout: ' + stdout);
+                    console.log('stderr: ' + stderr);
+
+                    if(error !== null){
+                    console.log('exec error: ' + error);
+                    }
+                });
+                break;
+            case "/api/stopserver/":
+
+                //ps tree is used since exec spawns a shell which spawns the server.jar
+                mcServer.kill()
+                break;
+            case "/api/serverstatus/":
+                //return serverstatus
+                break;
+            default:
+                //404
+        }
         return;
 
     }
@@ -29,7 +63,7 @@ var server = http.createServer(function (req, res) {
         req.url = '/index.html'
     }
 
-    //looks for the file specified in the url relative to /http/
+    //looks for the file specified in the url relative to the /http/ folder
     fs.readFile('http'+req.url, function (err, data) {
         if (err) {
             console.log(err)
@@ -42,6 +76,8 @@ var server = http.createServer(function (req, res) {
         res.end(data);
     });
 });
+
+
 
 //starts the server listener
 server.listen(PORT);

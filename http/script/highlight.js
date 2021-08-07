@@ -1,4 +1,6 @@
 var log = document.getElementById("log")
+var startButton = document.getElementById("startButton")
+var stopButton = document.getElementById("stopButton")
 
 //finds the loglevel of an mc log
 var LogLevelRegexp = /(?:\/)(\w+)(?:][ :])/
@@ -27,13 +29,13 @@ function atBottom(ele) {
 }
 
 //fetches the lates.log from the webserver at the beginnig
-fetch('mclog')
+fetch('/api/mclog')
         .then(response => response.text())
         .then(data => updateLog(data));
 
 //fetches the log every second
 setInterval(function(){
-    fetch('mclog')
+    fetch('/api/mclog')
         .then(response => response.text())
         .then(data => updateLog(data));
 },1000);

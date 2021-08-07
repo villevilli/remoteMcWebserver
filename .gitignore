@@ -122,3 +122,4 @@ mcserver/*
 
 # exception to the rule
 !mcserver/.gitkeep 
+!mcserver/eula.txt
