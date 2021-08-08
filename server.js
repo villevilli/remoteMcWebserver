@@ -3,8 +3,8 @@ var fs = require('fs');
 var mime = require('mime-types');
 var escape = require('escape-html');
 
-var cp = require('child_process'),
-    psTree = require('ps-tree');
+var cp = require('child_process')
+var ps = require('ps-node');
 
 var mcServer
 
@@ -45,9 +45,28 @@ var server = http.createServer(function (req, res) {
                 });
                 break;
             case "/api/stopserver/":
+                ps.lookup({
+                    command: 'java',
+                    arguments: '-jar',
+                    }, function(err, resultList ) {
+                        if (err) {
+                            throw new Error( err );
+                        }
+                     
+                        resultList.forEach(function( process ){
+                            if( process ){
+                                ps.kill( process.pid, function( err ) {
+                                    if (err) {
+                                        throw new Error( err );
+                                    }
+                                    else {
+                                        console.log( 'Process %s has been killed without a clean-up!', pid );
+                                    }
+                                });
+                            }
+                        });
+                    });
 
-                //ps tree is used since exec spawns a shell which spawns the server.jar
-                mcServer.kill()
                 break;
             case "/api/serverstatus/":
                 //return serverstatus
