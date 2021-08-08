@@ -52,8 +52,14 @@ wss.on('connection', function connection(ws) {
         switch(message.toString()){
             case "startServer":
                 console.log("starting minecraftserver")
+                wss.clients.forEach(function each(ws) {
+                    ws.send('clearLog')
+                })
+
                 mcServer = cp.exec('java -jar server.jar',{cwd: './mcserver'},
                 
+                
+
                 function (error, stdout, stderr){
                     console.log('stdout: ' + stdout);
                     console.log('stderr: ' + stderr);
@@ -65,7 +71,7 @@ wss.on('connection', function connection(ws) {
 
                 mcServer.stdout.on('data',( data ) => {
                     wss.clients.forEach(function each(ws) {
-                        ws.send(data)
+                        ws.send(escapeHTML(data))
                     });
                 })
 
@@ -73,6 +79,7 @@ wss.on('connection', function connection(ws) {
             case "stopServer":
                 console.log("killing minecraftserver")
                 try{
+                    //finds java running with the argument -jar and kills it
                     ps.lookup({
                         command: 'java',
                         arguments: '-jar',
@@ -98,6 +105,11 @@ wss.on('connection', function connection(ws) {
                     }
                 catch{}
                 break
+            case /^sendCommand \/(.+)/:
+                console.log("here")
+                sC = message.toString.match(/^sendCommand \/(.+)/)
+                mcServer.stdin.write('/'+sC[2]+'\n')
+                break;
         }
     });
     ws.send(fs.readFile(mcLogPath, function (err, data){

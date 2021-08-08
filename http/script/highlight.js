@@ -31,21 +31,22 @@ function atBottom(ele) {
 }
 
 serverSocket.onmessage = function(event){
-    updateLog(event.data)
+    console.log(event.data)
+    if(event.data == 'clearLog'){
+        log.innerHTML = ''
+        console.log('log cleared')
+    }
+    else{
+        updateLog(event.data)
+    }
+
 }
 
-//we will listen to websocket communications instead to save bandwith
-//fetches the lates.log from the webserver at the beginnig
-/*fetch('/api/mclog')
-        .then(response => response.text())
-        .then(data => updateLog(data));
-
-//fetches the log every second
-setInterval(function(){
-    fetch('/api/mclog')
-        .then(response => response.text())
-        .then(data => updateLog(data));
-},1000);*/
+function enterPress(event,commands){
+    if (event.key == 'Enter'){
+        sendCommand(commands)
+    }
+}
 
 function startServer(){
     serverSocket.send("startServer")
@@ -55,18 +56,15 @@ function stopServer(){
     serverSocket.send("stopServer")
 }
 
+function sendCommand(cmd){
+    console.log(cmd)
+    console.log(serverSocket.send("sendCommand "+cmd))
+}
+
 //parses minecraft log, adds code highlighting and updates the content on the webpages
 function updateLog(mcLog){
     //split mclog string by linebreaks
-    console.log("mclog type"+typeof(mcLog))
-    console.log("mclog data"+mcLog)
     mcLog = mcLog.split(LineBreakRegexp)
-
-
-    //checks if the lenght of the array not needed since this is now handled serverside
-    /*if (oldLenght == mcLog.length){
-        return
-    }*/
 
     let isBottom = atBottom(scrollBox);
 
@@ -74,7 +72,6 @@ function updateLog(mcLog){
     //iterates over the array adding code highligting
     for (let i = 0; i < mcLog.length; i++) {
         var logLevel = mcLog[i].match(LogLevelRegexp)
-        console.log(scrollBox.scrollTop)
         try{
             switch (logLevel[1]){
                 case "INFO":
@@ -93,14 +90,15 @@ function updateLog(mcLog){
             /*console.log(logLevel)
             console.error(error)
             console.log(mcLog)*/
-            mcLog[i] = '<span class="error">'+mcLog[i]+"</span>"
+            if (mcLog[i] != ''){
+                mcLog[i] = '<span class="error">'+mcLog[i]+"</span>"
+            }
         }
     }
     //turns the array into a string by joining at linebreks
-    console.log("among")
-    log.innerHTML = log.innerHTML + mcLog.join("\n")
-    console.log(isBottom)
-
+    if(typeof(mcLog == Array)){
+        log.innerHTML = log.innerHTML + mcLog.join("\n")
+    }
     //scrolls to the bottom of the page
     if(isBottom){
         scrollBox.scrollTop = scrollBox.scrollHeight;
