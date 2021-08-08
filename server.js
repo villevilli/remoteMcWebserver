@@ -45,28 +45,32 @@ var server = http.createServer(function (req, res) {
                 });
                 break;
             case "/api/stopserver/":
-                ps.lookup({
-                    command: 'java',
-                    arguments: '-jar',
-                    }, function(err, resultList ) {
-                        if (err) {
-                            throw new Error( err );
-                        }
-                     
-                        resultList.forEach(function( process ){
-                            if( process ){
-                                ps.kill( process.pid, function( err ) {
-                                    if (err) {
-                                        throw new Error( err );
-                                    }
-                                    else {
-                                        console.log( 'Process %s has been killed without a clean-up!', pid );
-                                    }
-                                });
-                            }
-                        });
-                    });
 
+                //kills the server process and since it crashed the webserver if no minecraft server was running i added the try except
+                try{
+                    ps.lookup({
+                        command: 'java',
+                        arguments: '-jar',
+                        }, function(err, resultList ) {
+                            if (err) {
+                                throw new Error( err );
+                            }
+                        
+                            resultList.forEach(function( process ){
+                                if( process ){
+                                    ps.kill( process.pid, function( err ) {
+                                        if (err) {
+                                            throw new Error( err );
+                                        }
+                                        else {
+                                            console.log( 'Process %s has been killed without a clean-up!', pid );
+                                        }
+                                    });
+                                }
+                            });
+                        });
+                    }
+                catch{}
                 break;
             case "/api/serverstatus/":
                 //return serverstatus
