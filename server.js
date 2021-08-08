@@ -5,7 +5,6 @@ var escape = require('escape-html');
 
 var cp = require('child_process')
 var ps = require('ps-node');
-
 var mcServer
 
 //path to the minecraft server latest.log
