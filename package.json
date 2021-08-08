@@ -3,10 +3,12 @@
   "version": "1.0.0",
   "description": "A web application to control a minecraft server remotely",
   "main": "server.js",
+  "type": "module",
   "dependencies": {
     "escape-html": "^1.0.3",
     "mime-types": "^2.1.32",
-    "ps-node": "^0.1.6"
+    "ps-node": "^0.1.6",
+    "ws": "^8.0.0"
   },
   "devDependencies": {},
   "scripts": {

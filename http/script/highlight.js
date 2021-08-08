@@ -1,6 +1,8 @@
 var log = document.getElementById("log")
-var startButton = document.getElementById("startButton")
-var stopButton = document.getElementById("stopButton")
+
+var domainName = "127.0.0.1"
+
+var serverSocket = new WebSocket("ws://"+domainName+"/")
 
 //finds the loglevel of an mc log
 var LogLevelRegexp = /(?:\/)(\w+)(?:][ :])/
@@ -28,8 +30,13 @@ function atBottom(ele) {
         {return false;}
 }
 
+serverSocket.onmessage = function(event){
+    updateLog(event.data)
+}
+
+//we will listen to websocket communications instead to save bandwith
 //fetches the lates.log from the webserver at the beginnig
-fetch('/api/mclog')
+/*fetch('/api/mclog')
         .then(response => response.text())
         .then(data => updateLog(data));
 
@@ -38,17 +45,28 @@ setInterval(function(){
     fetch('/api/mclog')
         .then(response => response.text())
         .then(data => updateLog(data));
-},1000);
+},1000);*/
+
+function startServer(){
+    serverSocket.send("startServer")
+}
+
+function stopServer(){
+    serverSocket.send("stopServer")
+}
 
 //parses minecraft log, adds code highlighting and updates the content on the webpages
 function updateLog(mcLog){
     //split mclog string by linebreaks
+    console.log("mclog type"+typeof(mcLog))
+    console.log("mclog data"+mcLog)
     mcLog = mcLog.split(LineBreakRegexp)
 
-    //checks if the lenght of the array
-    if (oldLenght == mcLog.length){
+
+    //checks if the lenght of the array not needed since this is now handled serverside
+    /*if (oldLenght == mcLog.length){
         return
-    }
+    }*/
 
     let isBottom = atBottom(scrollBox);
 
@@ -79,7 +97,8 @@ function updateLog(mcLog){
         }
     }
     //turns the array into a string by joining at linebreks
-    log.innerHTML = mcLog.join("\n")
+    console.log("among")
+    log.innerHTML = log.innerHTML + mcLog.join("\n")
     console.log(isBottom)
 
     //scrolls to the bottom of the page
