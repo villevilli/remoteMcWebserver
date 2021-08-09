@@ -1,6 +1,6 @@
 var log = document.getElementById("log")
 
-var domainName = "127.0.0.1"
+var domainName = location.host
 
 var serverSocket = new WebSocket("ws://"+domainName+"/")
 
