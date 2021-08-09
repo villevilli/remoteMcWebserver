@@ -8,6 +8,7 @@ import * as ps from 'ps-node'
 import escapeHTML from 'escape-html';
 
 var mcServer
+var sendCommanRegexp = /^sendCommand:(\/.+)/
 
 //path to the minecraft server latest.log
 var mcLogPath = './mcserver/logs/latest.log'
@@ -49,7 +50,13 @@ wss.on('connection', function connection(ws) {
     ws.on('pong', heartbeat);
 
     ws.on('message', function incoming(message) {
-        switch(message.toString()){
+        console.log('incoming websocket message: '+message.toString()+' \nregexp test: '+message.toString().match(sendCommanRegexp))
+
+        let messageArray = message.toString().split(':')
+
+        console.log("messagearray:" + messageArray)
+
+        switch(messageArray[0]){
             case "startServer":
                 console.log("starting minecraftserver")
                 wss.clients.forEach(function each(ws) {
@@ -101,14 +108,21 @@ wss.on('connection', function connection(ws) {
                                 }
                             });
                         });
+
+                    //kills the shell instance that ran the java command
                     mcServer.kill()
                     }
                 catch{}
                 break
-            case /^sendCommand \/(.+)/:
+            case "sendCommand":
                 console.log("here")
-                sC = message.toString.match(/^sendCommand \/(.+)/)
-                mcServer.stdin.write('/'+sC[2]+'\n')
+                let sC = message.toString().match(sendCommanRegexp)
+                try{
+                mcServer.stdin.write(sC[1]+'\n')
+                }
+                catch(error){
+                    console.log(error)
+                }
                 break;
         }
     });

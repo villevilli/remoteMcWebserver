@@ -42,9 +42,15 @@ serverSocket.onmessage = function(event){
 
 }
 
-function enterPress(event,commands){
+function enterPress(commands){
+    tempElement = document.getElementById(commands)
     if (event.key == 'Enter'){
-        sendCommand(commands)
+        console.log(tempElement.value[0])
+        if (tempElement.value[0] != '/'){
+            tempElement.value = '/'+tempElement.value
+        }
+        sendCommand(tempElement.value)
+        tempElement.value = ''
     }
 }
 
@@ -58,7 +64,7 @@ function stopServer(){
 
 function sendCommand(cmd){
     console.log(cmd)
-    console.log(serverSocket.send("sendCommand "+cmd))
+    console.log(serverSocket.send("sendCommand:"+cmd))
 }
 
 //parses minecraft log, adds code highlighting and updates the content on the webpages

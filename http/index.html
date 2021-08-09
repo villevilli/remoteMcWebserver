@@ -11,7 +11,7 @@
     <div class="main">
         <div class="powerButton">
             <button class="powerButton" id="stopButton" onclick="startServer()">start server</button>
-            <button class="powerButton" id="stopButton" onclick="stopServer()">stop server</button>
+            <button class="powerButton" id="stopButton" onclick="stopServer()">force kill the server</button>
         </div>
         <div class="logControls">
             <div class="log" id="scrollBox">
@@ -19,7 +19,7 @@
 
             </pre>
             </div>
-            <input type="text" spellcheck="false" id="commandButton" onkeypress="enterPress(event,sendCommand(document.getElementById('commandButton').value))">
+            <input type="text" spellcheck="false" id="commandButton" onkeyup="enterPress('commandButton')">
             <button>send command</button>
         </div>
     </div>
