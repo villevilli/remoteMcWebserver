@@ -7,6 +7,12 @@ import * as cp from 'child_process'
 import * as ps from 'ps-node'
 import escapeHTML from 'escape-html';
 
+var authPassword="test"
+var authToken="amogus"
+
+let buff = new Buffer.from("admin:"+authPassword);
+var basedPassword = buff.toString('base64');
+
 var mcServer
 var sendCommanRegexp = /^sendCommand:(\/.+)/
 
@@ -16,23 +22,58 @@ const PORT=80;
 
 //webserver handling returns are used to skip the rest of the js to not crash
 var webApp = function (req, res) {
+    console.log(req.headers)
     //returns index.html when no content is specified
     if (req.url == '/'){
         req.url = '/index.html'
     }
+    var responseCode=200
+    switch(req.method){
+        case "GET":
+            //check if authorization code is valid
+            if (req.url == '/index.html'){
+                //wont work if there are any other cookies!
+                if(req.headers["cookie"] == "authToken="+authToken){
+                    
+                }
+                else {
+                    if(req.headers["authorization"] == "Basic"+basedPassword){
+                        res.setHeader("Set-Cookie", "authToken="+authToken)
+                        res.writeHead(responseCode)
+                        return res.end()
+                    }
 
-    //looks for the file specified in the url relative to the /http/ folder
-    fs.readFile('http'+req.url, function (err, data) {
-        if (err) {
-            console.log(err)
-            console.log(req.url)
-            res.writeHead(404);
-            return res.end("File not found.");
-        }    
-        res.setHeader("Content-Type", mime.lookup(req.url));
-        res.writeHead(200);
-        res.end(data);
-    });
+                    console.log(basedPassword+ " != "+ req.headers["authorization"]);
+                    responseCode=401
+                    req.url='/login.html'
+                    res.setHeader("WWW-Authenenticate", "Basic");
+                }
+            }
+            //looks for the file specified in the url relative to the /http/ folder
+            fs.readFile('http'+req.url, function (err, data) {
+                if (err) {
+                    console.log(err)
+                    console.log(req.url)
+                    res.writeHead(404);
+                    return res.end("File not found.");
+                }    
+                res.setHeader("Content-Type", mime.lookup(req.url));
+                res.writeHead(responseCode);
+                res.end(data);
+            });
+            break
+        case "POST":
+            var body = "";
+            req.on('data', function (chunk) {
+                body += chunk;
+            });
+            req.on('end', function () {
+                console.log('POSTed: ' + body);
+                res.writeHead(responseCode);
+                res.end(body);
+            });
+            break
+    }
 };
 
 //ping function to check if the connection was shut down non cleanly
