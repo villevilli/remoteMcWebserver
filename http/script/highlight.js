@@ -50,7 +50,7 @@ function enterPress(commands){
             tempElement.value = '/'+tempElement.value
         }
         sendCommand(tempElement.value)
-        tempElement.value = ''
+        tempElement.value = '/'
     }
 }
 

@@ -15,7 +15,7 @@ var mcLogPath = './mcserver/logs/latest.log'
 const PORT=80; 
 
 //webserver handling returns are used to skip the rest of the js to not crash
-var server = http.createServer(function (req, res) {
+var webApp = function (req, res) {
     //returns index.html when no content is specified
     if (req.url == '/'){
         req.url = '/index.html'
@@ -33,19 +33,28 @@ var server = http.createServer(function (req, res) {
         res.writeHead(200);
         res.end(data);
     });
-});
+};
 
-//websocket server to save bandwith and increase server and client perfromance massively
+//ping function to check if the connection was shut down non cleanly
+var ping = function ping() {
+    wss.clients.forEach(function each(ws) {
+        if (ws.isAlive === false) return ws.terminate();
+    
+        ws.isAlive = false;
+        ws.ping(noop);
+    });
+}
 
+
+//websocketserver
+//do not remove this please
 function noop() {}
 
 function heartbeat() {
-  this.isAlive = true;
-}
+    this.isAlive = true;
+  }
 
-const wss = new WebSocketServer({ server });
-
-wss.on('connection', function connection(ws) {
+var wsOnConnect = function connection(ws) {
     ws.isAlive = true;
     ws.on('pong', heartbeat);
 
@@ -133,18 +142,18 @@ wss.on('connection', function connection(ws) {
         }
         ws.send(escapeHTML(data));
     }));
-});
+}
 
-const interval = setInterval(function ping() {
-    wss.clients.forEach(function each(ws) {
-        if (ws.isAlive === false) return ws.terminate();
-    
-        ws.isAlive = false;
-        ws.ping(noop);
-    });
-} , 30000);
+var server = http.createServer(webApp)
+
+const wss = new WebSocketServer({ server });
+
+wss.on('connection', wsOnConnect);
+
+const interval = setInterval(ping , 30000);
 
 //starts the server listener
+
 server.listen(PORT);
 
 console.log('Node.js web server at port '+PORT.toString()+' is running..');
