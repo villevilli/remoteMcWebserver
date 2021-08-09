@@ -71,7 +71,7 @@ span#commandInput{
     border: none;
     background-color: inherit;
     font-size: 16px;
-    margin: 0.2rem;
+    margin: 0.4rem;
 }
 #commandText{
     font-size: inherit;
@@ -79,7 +79,27 @@ span#commandInput{
     color: inherit;
     background-color: inherit;
     flex-basis: 100%;
+    margin-right: 5px;
 }
+
+button{
+    font-size: inherit;
+    color: inherit;
+    background-color: inherit;
+    border: solid;
+    border-radius: 4px;
+    right: 0px;
+    margin-bottom: 6px;
+}
+button:hover{
+    color: green;
+}
+button:active{
+    box-shadow: 0 -5px #666;
+    background-color: rgb(29, 29, 29);
+    transform: translateY(4px); 
+}
+
 #commandSendButton{
     font-size: inherit;
     border: inherit ;
@@ -88,6 +108,15 @@ span#commandInput{
     border-left: none;
     right: 0px;
     position: relative;
+    margin-right: 6px;
+}
+#commandSendButton:hover{
+    color: green;
+}
+#commandSendButton:active{
+    box-shadow: 0 -5px #666;
+    background-color: rgb(29, 29, 29);
+    transform: translateY(4px); 
 }
 .commandInput{
     border-right: none;

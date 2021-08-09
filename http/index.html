@@ -18,7 +18,7 @@
             </div>
             <span id="commandInput">
                 <input type="text" spellcheck="false" class="commandInput" id="commandText" value="/" onkeyup="enterPress('commandText')">
-                <button class="commandInput" id="commandSendButton">&#10003;</button>
+                <button class="commandInput" id="commandSendButton" onclick="sendCommand(document.getElementById('commandText'))">&#10003;</button>
             </span>
         </div>
     </div>
