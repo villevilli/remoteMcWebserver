@@ -30,35 +30,36 @@ var webApp = function (req, res) {
     var responseCode=200
     switch(req.method){
         case "GET":
-            //check if authorization code is valid
-            if (req.url == '/index.html'){
-                //wont work if there are any other cookies!
+            //handle get requests
+            indexCheck:if (req.url == '/index.html'){
+                /*wont work if there are any other cookies!
+                checks if the authentication coockie exsists and if it does sends the console
+                instead of the login page by breaking the if statement and keeping req.url as index.html*/
                 if(req.headers["cookie"] == "authToken="+authToken){
-                    
+                    break indexCheck;
                 }
-                else {
-                    if(req.headers["authorization"] == "Basic"+basedPassword){
-                        let ip = res.socket.remoteAddress;
-                        let dateTime = new Date().toISOString()
-                        let authMessage = '['+dateTime+']: Authenticated a user with the ip of: '+ip.match(ipregexp)+' \n'
 
-                        console.log(authMessage)
-                        fs.appendFile('AuthLog.log',authMessage, (err) => {
-                            if (err) {
-                              console.log(err);
-                            }
-                          });
-                        res.setHeader("Set-Cookie", "authToken="+authToken)
-                        res.writeHead(responseCode)
-                        return res.end()
-                    }
+                else if(req.headers["authorization"] == "Basic"+basedPassword){
+                    let ip = res.socket.remoteAddress;
+                    let dateTime = new Date().toISOString()
+                    let authMessage = '['+dateTime+']: Authenticated a user with the ip of: '+ip.match(ipregexp)+' \n'
 
-                    console.log(basedPassword+ " != "+ req.headers["authorization"]);
-                    responseCode=401
-                    req.url='/login.html'
-                    res.setHeader("WWW-Authenenticate", "Basic");
+                    console.log(authMessage)
+                    fs.appendFile('AuthLog.log',authMessage, (err) => {
+                        if (err) {
+                            console.log(err);
+                        }
+                        });
+                    res.setHeader("Set-Cookie", "authToken="+authToken)
+                    res.writeHead(responseCode)
+                    return res.end()
                 }
+                console.log(basedPassword+ " != "+ req.headers["authorization"]);
+                responseCode=401
+                req.url='/login.html'
+                res.setHeader("WWW-Authenenticate", "Basic");
             }
+            
             //looks for the file specified in the url relative to the /http/ folder
             fs.readFile('http'+req.url, function (err, data) {
                 if (err) {
