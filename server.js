@@ -2,7 +2,6 @@ import { WebSocketServer } from 'ws';
 import * as http from 'http'
 import * as fs from 'fs'
 import * as mime from 'mime-types'
-import 'escape-html'
 import * as cp from 'child_process'
 import * as ps from 'ps-node'
 import escapeHTML from 'escape-html';
@@ -14,7 +13,8 @@ let buff = new Buffer.from("admin:"+authPassword);
 var basedPassword = buff.toString('base64');
 
 var mcServer
-var sendCommanRegexp = /^sendCommand:(\/.+)/
+const sendCommanRegexp = /^sendCommand:(\/.+)/
+const ipregexp = /[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/
 
 //path to the minecraft server latest.log
 var mcLogPath = './mcserver/logs/latest.log'
@@ -38,6 +38,16 @@ var webApp = function (req, res) {
                 }
                 else {
                     if(req.headers["authorization"] == "Basic"+basedPassword){
+                        let ip = res.socket.remoteAddress;
+                        let dateTime = new Date().toISOString()
+                        let authMessage = '['+dateTime+']: Authenticated a user with the ip of: '+ip.match(ipregexp)+' \n'
+
+                        console.log(authMessage)
+                        fs.appendFile('AuthLog.log',authMessage, (err) => {
+                            if (err) {
+                              console.log(err);
+                            }
+                          });
                         res.setHeader("Set-Cookie", "authToken="+authToken)
                         res.writeHead(responseCode)
                         return res.end()
