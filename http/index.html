@@ -1,12 +1,16 @@
 <!DOCTYPE html>
 
-<body>
+<html>
+
+<head>
+    <title>minceraft server control panel</title>
+    <meta charset="UTF-8">
     <link rel="stylesheet" href="stylesheet.css">
-    <head>       
-        <meta charset="UTF-8">
-    </head>
-    </style>
-    <html>
+    <!--loads a mobile css file if a mobile browser is detected using the useragent-->
+    <script type="text/javascript" src="script/mobilecheck.js"></script>
+</head>
+
+<body>
     <div class="main">
         <div class="powerButton">
             <button class="powerButton" id="stopButton" onclick="startServer()">start server</button>
@@ -17,12 +21,15 @@
                 <pre id="log" a></pre>
             </div>
             <span id="commandInput">
-                <input type="text" spellcheck="false" class="commandInput" id="commandText" value="/" onkeyup="enterPress('commandText')">
-                <button class="commandInput" id="commandSendButton" onclick="sendCommand(document.getElementById('commandText'))">&#10003;</button>
+                <input type="text" spellcheck="false" class="commandInput" id="commandText" value="/"
+                    onkeyup="enterPress('commandText')">
+                <button class="commandInput" id="commandSendButton"
+                    onclick="sendCommand(document.getElementById('commandText'))">&#10003;</button>
             </span>
         </div>
     </div>
 
-    </html>
-    <script type="text/javascript" src="script/highlight.js"></script>
 </body>
+<script type="text/javascript" src="script/highlight.js"></script>
+
+</html>

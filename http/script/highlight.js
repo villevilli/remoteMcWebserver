@@ -13,14 +13,11 @@ var LineBreakRegexp = /\r?\n/
 var scrollBox = document.getElementById("scrollBox")
 let oldLenght = 0
 
-console.log(scrollBox)
-
 //used to check if an element has been scrolled to the bottom
 function atBottom(ele) {
     var sh = ele.scrollHeight;
     var st = ele.scrollTop;
     var ch = ele.clientHeight;
-    console.log(sh - ch,st)
     if(ch==0) {
         return true;
     }
@@ -31,7 +28,6 @@ function atBottom(ele) {
 }
 
 serverSocket.onmessage = function(event){
-    console.log(event.data)
     if(event.data == 'clearLog'){
         log.innerHTML = ''
         console.log('log cleared')
@@ -45,7 +41,6 @@ serverSocket.onmessage = function(event){
 function enterPress(commands){
     tempElement = document.getElementById(commands)
     if (event.key == 'Enter'){
-        console.log(tempElement.value)
         sendCommand(tempElement)
     }
 }
@@ -59,7 +54,6 @@ function stopServer(){
 }
 
 function sendCommand(tempElement){
-    console.log(tempElement.value)
         if (tempElement.value[0] != '/'){
             tempElement.value = '/'+tempElement.value
         }
