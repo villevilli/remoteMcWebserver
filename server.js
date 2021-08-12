@@ -6,6 +6,8 @@ import * as cp from 'child_process'
 import * as ps from 'ps-node'
 import escapeHTML from 'escape-html';
 
+
+var protectedPages=['/index.html', '/test.html']
 var authPassword="test"
 var authToken="amogus"
 
@@ -27,11 +29,16 @@ var webApp = function (req, res) {
     if (req.url == '/'){
         req.url = '/index.html'
     }
+    if(req.url=='/login.html'){
+        res.writeHead(404);
+        return res.end("File not found.");
+    }
+
     var responseCode=200
     switch(req.method){
         case "GET":
             //handle get requests
-            indexCheck:if (req.url == '/index.html'){
+            indexCheck:if (protectedPages.includes(req.url)){
                 /*wont work if there are any other cookies!
                 checks if the authentication coockie exsists and if it does sends the console
                 instead of the login page by breaking the if statement and keeping req.url as index.html*/
