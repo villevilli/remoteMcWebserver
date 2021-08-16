@@ -1,4 +1,4 @@
-import {WebSocketServer} from 'ws';
+import { WebSocketServer } from 'ws';
 import * as http from 'http'
 import * as fs from 'fs'
 import * as mime from 'mime-types'

@@ -1,7 +1,7 @@
 var log = document.getElementById("log")
 
 var domainName = location.host
-
+var passwordInput = document.getElementById("commandText")
 var serverSocket = new WebSocket("ws://"+domainName+"/")
 
 //finds the loglevel of an mc log
@@ -38,10 +38,9 @@ serverSocket.onmessage = function(event){
 
 }
 
-function enterPress(commands){
-    tempElement = document.getElementById(commands)
+function enterPress(){
     if (event.key == 'Enter'){
-        sendCommand(tempElement)
+        sendCommand()
     }
 }
 
@@ -53,13 +52,12 @@ function stopServer(){
     serverSocket.send("stopServer")
 }
 
-function sendCommand(tempElement){
-        if (tempElement.value[0] != '/'){
-            tempElement.value = '/'+tempElement.value
-        }
-        sendCommand(tempElement.value,tempElement)
-        tempElement.value = '/'
-    serverSocket.send("sendCommand:"+tempElement.value)
+function sendCommand(){
+    if (passwordInput.value[0] != '/'){
+        passwordInput.value = '/'+passwordInput.value
+    }
+    serverSocket.send("sendCommand:"+passwordInput.value)
+    passwordInput.value = '/'
 }
 
 //parses minecraft log, adds code highlighting and updates the content on the webpages
