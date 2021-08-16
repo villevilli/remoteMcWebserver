@@ -10,6 +10,7 @@ import escapeHTML from 'escape-html';
 var protectedPages=['/index.html', '/test.html']
 var authPassword="test"
 var authToken="amogus"
+//time between autosaves in milliseconds
 const saveInterval = 60000
 
 let buff = new Buffer.from("admin:"+authPassword);
@@ -111,7 +112,13 @@ this saves the mc server automatically. this feature was thought of after our fr
 shut down the server trying to go to sleep and destroyed about an hour of progress
 */
 const saveMcServer = function saveMcServer(){
-    mcServer.stdin.write("/save-all")
+    try{
+        mcServer.stdin.write("/save-all")
+    }
+    catch(err){
+        console.log(err)
+    }
+    
 }
 
 //websocketserver
@@ -218,7 +225,7 @@ const wss = new WebSocketServer({ server });
 
 wss.on('connection', wsOnConnect);
 
-const interval = setInterval(ping , 30000);
+const autoSaveInterval = setInterval(ping , 30000);
 const interval = setInterval(saveMcServer, saveInterval)
 
 //starts the server listener
