@@ -10,6 +10,7 @@ import escapeHTML from 'escape-html';
 var protectedPages=['/index.html', '/test.html']
 var authPassword="test"
 var authToken="amogus"
+const saveInterval = 60000
 
 let buff = new Buffer.from("admin:"+authPassword);
 var basedPassword = buff.toString('base64');
@@ -17,6 +18,8 @@ var basedPassword = buff.toString('base64');
 var mcServer
 const sendCommanRegexp = /^sendCommand:(\/.+)/
 const ipregexp = /[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/
+
+
 
 //path to the minecraft server latest.log
 var mcLogPath = './mcserver/logs/latest.log'
@@ -103,7 +106,13 @@ var ping = function ping() {
         ws.ping(noop);
     });
 }
-
+/*
+this saves the mc server automatically. this feature was thought of after our friend Kasper accidentally
+shut down the server trying to go to sleep and destroyed about an hour of progress
+*/
+const saveMcServer = function saveMcServer(){
+    mcServer.stdin.write("/save-all")
+}
 
 //websocketserver
 //do not remove this please
@@ -210,6 +219,7 @@ const wss = new WebSocketServer({ server });
 wss.on('connection', wsOnConnect);
 
 const interval = setInterval(ping , 30000);
+const interval = setInterval(saveMcServer, saveInterval)
 
 //starts the server listener
 
