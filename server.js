@@ -113,7 +113,7 @@ shut down the server trying to go to sleep and destroyed about an hour of progre
 */
 const saveMcServer = function saveMcServer(){
     try{
-        mcServer.stdin.write("/save-all")
+        mcServer.stdin.write("/save-all\n")
     }
     catch(err){
         console.log(err)
